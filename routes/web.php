@@ -61,4 +61,8 @@ Route::controller(LaporanController::class)->group(function () {
         ->name('laporan.program');
 
 });
+Route::get('/ping', function () {
+    return 'OK';
+});
+
 
