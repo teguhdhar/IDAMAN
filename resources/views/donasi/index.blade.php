@@ -20,11 +20,76 @@
             text-transform: uppercase;
             font-size: 13px;
         }
+        .navbar .nav-link {
+            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+        }
+
+        .navbar .nav-link.active {
+            background: rgba(255,255,255,0.15);
+        }
+
     </style>
 </head>
 <body>
+<!-- NAVBAR FIXED TOP -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+    <div class="container">
 
-<div class="container py-4">
+        <a class="navbar-brand fw-bold" href="{{ url('/dashboard') }}">
+            <i class="bi bi-speedometer2 me-1"></i>
+            Dashboard KRA
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarKRA" aria-controls="navbarKRA"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarKRA">
+            <ul class="navbar-nav ms-auto gap-lg-2">
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('dashboard') ? 'active fw-bold' : '' }}"
+                       href="{{ url('/dashboard') }}">
+                        <i class="bi bi-house-door-fill me-1"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('program*') ? 'active fw-bold' : '' }}"
+                       href="{{ route('program.index') }}">
+                        <i class="bi bi-folder-fill me-1"></i>
+                        Program
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('donasi*') ? 'active fw-bold' : '' }}"
+                       href="{{ route('donasi.index') }}">
+                        <i class="bi bi-cash-coin me-1"></i>
+                        Donasi
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('pengeluaran*') ? 'active fw-bold' : '' }}"
+                       href="{{ route('pengeluaran.index') }}">
+                        <i class="bi bi-receipt-cutoff me-1"></i>
+                        Pengeluaran
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container pt-5 mt-4">
 
     <!-- HEADER -->
     <div class="text-center mb-4">

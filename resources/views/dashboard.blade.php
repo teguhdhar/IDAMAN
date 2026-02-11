@@ -71,12 +71,79 @@
             font-size: 12px;
             color: #6c757d;
         }
+        .navbar .nav-link {
+            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+        }
+
+        .navbar .nav-link.active {
+            background: rgba(255,255,255,0.15);
+        }
+
     </style>
 </head>
 
 <body>
+<!-- NAVBAR FIXED TOP -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+    <div class="container">
 
-<div class="container py-4">
+        <a class="navbar-brand fw-bold" href="{{ url('/dashboard') }}">
+            <i class="bi bi-speedometer2 me-1"></i>
+            Dashboard KRA
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarKRA" aria-controls="navbarKRA"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarKRA">
+            <ul class="navbar-nav ms-auto gap-lg-2">
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('dashboard') ? 'active fw-bold' : '' }}"
+                       href="{{ url('/dashboard') }}">
+                        <i class="bi bi-house-door-fill me-1"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('program*') ? 'active fw-bold' : '' }}"
+                       href="{{ route('program.index') }}">
+                        <i class="bi bi-folder-fill me-1"></i>
+                        Program
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('donasi*') ? 'active fw-bold' : '' }}"
+                       href="{{ route('donasi.index') }}">
+                        <i class="bi bi-cash-coin me-1"></i>
+                        Donasi
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('pengeluaran*') ? 'active fw-bold' : '' }}"
+                       href="{{ route('pengeluaran.index') }}">
+                        <i class="bi bi-receipt-cutoff me-1"></i>
+                        Pengeluaran
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+
+
+<div class="container pt-5 mt-4">
 
     <!-- HEADER -->
     <div class="text-center mb-4">
@@ -156,6 +223,72 @@
         </div>
 
     </div>
+
+    <!-- INFO REKENING DONASI -->
+<div class="row justify-content-center mb-4">
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm" style="border-radius:16px;">
+            <div class="card-body p-4">
+
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div>
+                        <h5 class="fw-bold mb-1 text-success">
+                            <i class="bi bi-bank me-1"></i>
+                            Rekening Donasi Resmi
+                        </h5>
+                        <p class="text-muted mb-0" style="font-size:14px;">
+                            Silakan transfer donasi melalui rekening berikut:
+                        </p>
+                    </div>
+
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
+                        Terverifikasi
+                    </span>
+                </div>
+
+                <hr>
+
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-8">
+                        <div class="p-3 bg-light rounded-3 border">
+                             <img src="{{ asset('assets\img\BCA.jpg') }}"
+                                alt="Logo BCA"
+                                style="height:35px; width:auto;">
+                            <div class="text-muted small mt-2">No Rekening</div>
+                            <div class="fw-bold fs-4 text-primary" id="noRekening">
+                                6250398237
+                            </div>
+
+                            <div class="text-muted small mt-2">Atas Nama</div>
+                            <div class="fw-semibold">
+                                Teguh Dharmawan
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 text-center">
+                        <button class="btn btn-primary w-100 mb-2" onclick="copyRekening()">
+                            <i class="bi bi-clipboard-check me-1"></i>
+                            Copy Rekening
+                        </button>
+
+                    <a href="https://wa.me/6281291557200?text=Assalamu%27alaikum%20Panitia%20KRA,%20saya%20mau%20konfirmasi%20transfer%20donasi.%0A%0ANama:%20%0ATanggal%20Transfer:%20%0ANominal:%20%0ABank:%20%0ABukti%20Transfer:%20"
+                        target="_blank"
+                        class="btn btn-outline-success w-100">
+                            <i class="bi bi-whatsapp me-1"></i>
+                            Konfirmasi Transfer
+                        </a>
+                        <div class="text-muted mt-2" style="font-size:12px;">
+                            Setelah transfer, silakan konfirmasi ke panitia.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <!-- RINGKASAN PROGRAM -->
     <div class="d-flex align-items-center justify-content-between mb-2">
@@ -271,6 +404,14 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function copyRekening() {
+    let rekening = document.getElementById("noRekening").innerText.trim();
+    navigator.clipboard.writeText(rekening);
+
+    alert("Nomor rekening berhasil dicopy: " + rekening);
+}
+</script>
 
 </body>
 </html>
