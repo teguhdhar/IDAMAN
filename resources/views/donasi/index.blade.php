@@ -1,106 +1,179 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title>Donasi</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f6f8;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+        }
+        .table thead th {
+            background-color: #f1f3f5;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
-<h2>Ringkasan Donasi</h2>
 
-<p>
-    <strong>Total Donasi Keseluruhan:</strong>
-    Rp {{ number_format($totalDonasi) }}
-</p>
+<div class="container py-4">
 
-{{-- <h3>Total Donasi per Program</h3>
+    <!-- HEADER -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold mb-1">Menu Donasi</h2>
+        <p class="text-muted">Input Donasi & Riwayat Donasi Donatur</p>
+    </div>
 
-<ul>
-    @foreach($donasiPerProgram as $item)
-        <li>
-            {{ $item->program->nama_program }} :
-            Rp {{ number_format($item->total) }}
-        </li>
-    @endforeach
-</ul> --}}
+    <!-- SUMMARY -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">Total Donasi Keseluruhan</h6>
+                    <div class="fs-4 fw-bold text-success">
+                        Rp {{ number_format($totalDonasi,0,',','.') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<hr>
+    <!-- ALERT SUCCESS -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
-{{-- <h2>Saldo Program</h2>
+    <!-- FORM DONASI -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header fw-semibold">
+            Form Donasi
+        </div>
+        <div class="card-body">
 
-<table border="1" cellpadding="8">
-    <tr>
-        <th>Program</th>
-        <th>Donasi</th>
-        <th>Pengeluaran</th>
-        {{-- <th>Saldo</th> --}}
-    {{-- </tr>
+            <form method="POST" action="{{ route('donasi.store') }}">
+                @csrf
 
-    @foreach($saldoPerProgram as $item)
-        <tr>
-            <td>{{ $item['nama'] }}</td>
-            <td>{{ number_format($item['donasi']) }}</td>
-            <td>{{ number_format($item['pengeluaran']) }}</td>
-            {{-- <td><strong>{{ number_format($item['saldo']) }}</strong></td> --}}
-        {{-- </tr>
-    @endforeach
-</table>  --}}
+                <div class="row g-3">
 
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nama Donatur</label>
+                        <input type="text" name="nama_donatur" class="form-control"
+                               placeholder="Masukkan nama donatur" required>
+                    </div>
 
-<h2>Form Donasi</h2>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nominal</label>
+                        <input type="number" name="nominal" class="form-control"
+                               placeholder="Masukkan nominal donasi" required>
+                    </div>
 
-@if(session('success'))
-    <p style="color:green">{{ session('success') }}</p>
-@endif
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input type="email" name="email" class="form-control"
+                               placeholder="Opsional (contoh: donatur@email.com)">
+                    </div>
 
-<form method="POST" action="{{ route('donasi.store') }}">
-@csrf
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">No HP</label>
+                        <input type="text" name="no_hp" class="form-control"
+                               placeholder="Opsional (contoh: 08123456789)">
+                    </div>
 
-<label>Nama Donatur</label>
-<input type="text" name="nama_donatur" required>
+                    <div class="col-md-12 text-end">
+                        <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                            Simpan Donasi
+                        </button>
+                    </div>
 
-<label>Email</label>
-<input type="email" name="email">
+                </div>
+            </form>
 
-<label>No HP</label>
-<input type="text" name="no_hp">
+        </div>
+    </div>
 
-<label>Nominal</label>
-<input type="number" name="nominal" required>
+    <!-- TABLE DONASI -->
+    <div class="card shadow-sm">
+        <div class="card-header fw-semibold">
+            Daftar Donasi
+        </div>
 
-<button type="submit">Simpan Donasi</button>
-</form>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered mb-0 align-middle">
+                <thead>
+                    <tr>
+                        <th style="width:70px;">No</th>
+                        <th>Donatur</th>
+                        <th class="text-end" style="width:180px;">Nominal</th>
+                        <th style="width:160px;">Tanggal</th>
+                        <th style="width:160px;" class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($donasis as $donasi)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $donasi->donatur->nama ?? 'Anonim' }}</td>
+                        <td class="text-end fw-semibold text-success">
+                            Rp {{ number_format($donasi->nominal,0,',','.') }}
+                        </td>
+                        <td>
+                            {{ \Carbon\Carbon::parse($donasi->tanggal)->format('d-m-Y') }}
+                        </td>
+                        <td class="text-center">
 
-<hr>
+                            <a href="{{ route('donasi.edit', $donasi->id) }}"
+                               class="btn btn-sm btn-warning text-white">
+                                Edit
+                            </a>
 
-<table border="1">
-<tr>
-    <th>No</th>
-    <th>Donatur</th>
-    <th>Nominal</th>
-    <th>Tanggal</th>
-    <th>Aksi</th>
-</tr>
+                            <form action="{{ route('donasi.destroy', $donasi->id) }}"
+                                  method="POST"
+                                  class="d-inline"
+                                  onsubmit="return confirm('Yakin hapus donasi ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Hapus
+                                </button>
+                            </form>
 
-@foreach($donasis as $donasi)
-<tr>
-    <td>{{ $loop->iteration }}</td>
-    <td>{{ $donasi->donatur->nama }}</td>
-    <td>Rp {{ number_format($donasi->nominal) }}</td>
-    <td>{{ $donasi->tanggal }}</td>
-    <td>
-        <a href="{{ route('donasi.edit', $donasi->id) }}">Edit</a>
-        <form action="{{ route('donasi.destroy', $donasi->id) }}"
-              method="POST"
-              style="display:inline"
-              onsubmit="return confirm('Yakin hapus donasi ini?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit">Hapus</button>
-        </form>
-    </td>
-</tr>
-@endforeach
-</table>
+                        </td>
+                    </tr>
+                    @endforeach
 
+                    @if(count($donasis) == 0)
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                Belum ada data donasi.
+                            </td>
+                        </tr>
+                    @endif
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="text-center text-muted small mt-4">
+        © {{ date('Y') }} — Modul Donasi Transparan
+    </div>
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

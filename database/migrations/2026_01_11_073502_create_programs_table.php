@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama_program');
             $table->text('deskripsi')->nullable();
             $table->timestamps();
-});
+    });
 
     }
 
