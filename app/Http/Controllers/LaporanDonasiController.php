@@ -18,7 +18,7 @@ class LaporanDonasiController extends Controller
         ->when($from && $to, function ($q) use ($from, $to) {
             $q->whereBetween('tanggal', [$from, $to]);
         })
-        ->orderBy('tanggal', 'desc')
+        ->orderBy('id', 'asc')
         ->get();
 
     $totalDonasi = $donasis->sum('nominal');
@@ -43,7 +43,7 @@ class LaporanDonasiController extends Controller
         ->when($from && $to, function ($q) use ($from, $to) {
             $q->whereBetween('tanggal', [$from, $to]);
         })
-        ->orderBy('tanggal', 'desc')
+        ->orderBy('id', 'asc')
         ->get();
 
     $totalDonasi = $donasis->sum('nominal');
